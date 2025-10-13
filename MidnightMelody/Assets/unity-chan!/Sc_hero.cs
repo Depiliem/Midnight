@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sc_hero : MonoBehaviour
 {
     public float speed = 5f;
-    public float runSpeed = 9f;
+    public float runSpeed = 7.5f;
     public float rotationSpeed = 10f;
 
     Animator HeroAniCont; // gak perlu di-set manual, akan otomatis diambil
