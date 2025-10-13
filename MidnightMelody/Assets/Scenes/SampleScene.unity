@@ -1800,13 +1800,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acefc40e471c444799654e3f8309fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 0}
+  lineRenderer: {fileID: 553973764}
   laserDistance: 30
   onTime: 8
   offTime: 3
   hitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
 --- !u!120 &553973764
 LineRenderer:
   serializedVersion: 2
@@ -2529,7 +2529,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7674ca49617ab244a952faebfdc39b10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1013306169}
   m_SourcePrefab: {fileID: 100100000, guid: 7674ca49617ab244a952faebfdc39b10, type: 3}
 --- !u!1001 &764959685
 PrefabInstance:
@@ -3012,6 +3015,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 596557109d929d443a1db8ece53c8ae1, type: 3}
+--- !u!1 &1013306165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7674ca49617ab244a952faebfdc39b10, type: 3}
+  m_PrefabInstance: {fileID: 757600858}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1013306169
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013306165}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1412174740188593543, guid: 7674ca49617ab244a952faebfdc39b10, type: 3}
 --- !u!1001 &1026938146
 PrefabInstance:
   m_ObjectHideFlags: 0
