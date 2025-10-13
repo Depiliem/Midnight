@@ -3408,60 +3408,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5c08371cb73c94f8d4bf2e57270074, type: 3}
-<<<<<<< HEAD
---- !u!1 &1480878167 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5104795218644283029, guid: b38f5b590b91d4e48a126d722896fd60, type: 3}
-  m_PrefabInstance: {fileID: 1147134044}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1480878174
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1480878167}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.7379601, y: 0.90918297, z: 1.661593}
-  m_Center: {x: -0.000003799796, y: 0.45459166, z: 0.0000022053719}
---- !u!1 &1507717567 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4914560707137027758, guid: 134d6865e5d9db946a4d6eb757eb9dd6, type: 3}
-  m_PrefabInstance: {fileID: 1811501284}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1507717573
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1507717567}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.4459788, y: 0.62629956, z: 0.46892917}
-  m_Center: {x: 0, y: 0.31314978, z: 0.0000000074505815}
-=======
 --- !u!1001 &1453947396
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3523,7 +3469,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75ed50d25f1f407458e9d48c36228c09, type: 3}
->>>>>>> Andre
 --- !u!1001 &1540431128
 PrefabInstance:
   m_ObjectHideFlags: 0
