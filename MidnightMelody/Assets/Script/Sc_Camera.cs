@@ -16,8 +16,19 @@ public class Sc_camera : MonoBehaviour
 
     void Update()
     {
-        offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * turnSpeed, Vector3.up) * offset;
-        this.transform.position = posHero.position + offset;
-        this.transform.LookAt(posHero.position);
+        if (!Sc_hero.dialogue)
+        {
+            offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * turnSpeed, Vector3.up) * offset;
+            this.transform.position = posHero.position + offset;
+            this.transform.LookAt(posHero.position);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }
