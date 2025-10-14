@@ -4,34 +4,41 @@ using UnityEngine;
 
 public class Sc_Dialogue : MonoBehaviour
 {
-    int index = 2;
+    [HideInInspector]
+    public int index = 0; // index child dialog saat ini
 
     void Update()
     {
-        // kalau gak di mode dialog, abaikan
         if (!Sc_hero.dialogue)
             return;
 
-        // klik kiri untuk lanjut dialog
-        if (Input.GetMouseButtonDown(0) && transform.childCount > 1)
+        if (Input.GetMouseButtonDown(0))
         {
-            // matikan dialog sebelumnya (biar cuma satu yang aktif)
-            for (int i = 2; i < transform.childCount; i++)
-                transform.GetChild(i).gameObject.SetActive(false);
+            ShowNextDialogue();
+        }
+    }
 
-            // aktifkan dialog sesuai index
-            if (index < transform.childCount)
-            {
-                transform.GetChild(index).gameObject.SetActive(true);
-                index++;
-            }
-            else
-            {
-                // kalau udah habis semua
-                index = 2;
-                Sc_hero.dialogue = false;
-                gameObject.SetActive(false);
-            }
+    public void ShowNextDialogue()
+    {
+        if (transform.childCount == 0)
+            return;
+
+        // Matikan semua child
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
+
+        // Aktifkan dialog berikutnya
+        if (index < transform.childCount)
+        {
+            transform.GetChild(index).gameObject.SetActive(true);
+            index++;
+        }
+        else
+        {
+            // selesai semua dialog
+            index = 0;
+            Sc_hero.dialogue = false;
+            gameObject.SetActive(false);
         }
     }
 }
