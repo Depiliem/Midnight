@@ -1,71 +1,67 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class LaserTurret : MonoBehaviour
 {
     [Header("Laser Settings")]
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float laserDistance = 30f;
-    [SerializeField] private float onTime = 8f;   // nyala 8 detik
-    [SerializeField] private float offTime = 3f;  // mati 3 detik
-    [SerializeField] private LayerMask hitMask;
+    [SerializeField] private LineRenderer lineRenderer;   // Komponen LineRenderer untuk laser
+    [SerializeField] private float laserDistance = 30f;   // Jarak maksimum laser
+    [SerializeField] private float damageAmount = 25f;    // Damage per hit
+    [SerializeField] private float damageCooldown = 1f;   // Waktu jeda antar damage
+    [SerializeField] private LayerMask hitMask;           // Layer yang bisa terkena laser
 
-    private bool laserActive = false;
+    private bool canDamage = true;
     private RaycastHit hit;
 
     void Start()
     {
+        // Pastikan LineRenderer ada
         if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();
 
-        lineRenderer.enabled = false;
-        StartCoroutine(LaserCycle());
-    }
-
-    IEnumerator LaserCycle()
-    {
-        while (true)
-        {
-            // nyalakan laser
-            laserActive = true;
-            lineRenderer.enabled = true;
-            yield return new WaitForSeconds(onTime);
-
-            // matikan laser
-            laserActive = false;
-            lineRenderer.enabled = false;
-            yield return new WaitForSeconds(offTime);
-        }
+        // Aktifkan laser dari awal
+        lineRenderer.enabled = true;
     }
 
     void Update()
     {
-        if (!laserActive) return;
-
+        // Posisi awal laser = posisi turret
         lineRenderer.SetPosition(0, transform.position);
 
-        // tembak ray ke depan
+        // Tembakkan ray lurus ke depan
         if (Physics.Raycast(transform.position, transform.forward, out hit, laserDistance, hitMask))
         {
+            // Akhir laser = titik benturan
             lineRenderer.SetPosition(1, hit.point);
 
-            // jika kena hero
-            if (hit.collider.CompareTag("Player"))
+            // Cek apakah yang kena adalah Player
+            if (hit.collider.CompareTag("Player") && canDamage)
             {
-                Debug.Log("Hero terkena laser!");
-                // contoh: tambahkan efek damage
-                // hit.collider.GetComponent<HeroHealth>()?.TakeDamage(10);
+                PlayerHealth player = hit.collider.GetComponent<PlayerHealth>();
+                if (player != null)
+                {
+                    player.TakeDamage((int)damageAmount);
+                    StartCoroutine(DamageCooldown());
+                }
             }
         }
         else
         {
+            // Kalau tidak kena apa pun, laser tetap lurus ke depan
             lineRenderer.SetPosition(1, transform.position + transform.forward * laserDistance);
         }
     }
 
+    IEnumerator DamageCooldown()
+    {
+        canDamage = false;
+        yield return new WaitForSeconds(damageCooldown);
+        canDamage = true;
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position, transform.forward * laserDistance);
     }
 }
