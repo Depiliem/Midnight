@@ -23,11 +23,9 @@ public class Sc_Dialogue : MonoBehaviour
         if (transform.childCount == 0)
             return;
 
-        // Matikan semua child
         foreach (Transform child in transform)
             child.gameObject.SetActive(false);
 
-        // Aktifkan dialog berikutnya
         if (index < transform.childCount)
         {
             transform.GetChild(index).gameObject.SetActive(true);
@@ -35,10 +33,13 @@ public class Sc_Dialogue : MonoBehaviour
         }
         else
         {
-            // selesai semua dialog
             index = 0;
             Sc_hero.dialogue = false;
             gameObject.SetActive(false);
+
+            // Mulai quest setelah dialog selesai
+            QuestManager.instance.StartQuest();
         }
     }
+
 }
