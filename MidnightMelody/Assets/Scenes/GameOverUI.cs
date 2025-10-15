@@ -3,16 +3,17 @@ using UnityEngine.SceneManagement;
 
 public class GameOverUI : MonoBehaviour
 {
+    // Fungsi ini akan dipanggil saat tombol PlayAgain diklik
     public void PlayAgain()
     {
-        // 🔹 Ganti "Level1" sesuai nama scene gameplay kamu
-        SceneManager.LoadScene("Level1");
+        Debug.Log("Kembali ke Main Menu...");
+        SceneManager.LoadScene("MainMenu"); // pastikan nama scene persis
     }
 
+    // (opsional) tombol Quit juga bisa kamu tambahkan
     public void QuitGame()
     {
-        // Opsional: keluar dari game
-        Debug.Log("Quit game");
+        Debug.Log("Keluar game...");
         Application.Quit();
     }
 }
