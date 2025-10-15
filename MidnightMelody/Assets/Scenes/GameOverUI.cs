@@ -3,14 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class GameOverUI : MonoBehaviour
 {
-    // Fungsi ini akan dipanggil saat tombol PlayAgain diklik
+    void Start()
+    {
+        // Aktifkan kembali kursor saat scene GameOver dimulai
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void PlayAgain()
     {
         Debug.Log("Kembali ke Main Menu...");
-        SceneManager.LoadScene("MainMenu"); // pastikan nama scene persis
+        SceneManager.LoadScene("MainMenu");
     }
 
-    // (opsional) tombol Quit juga bisa kamu tambahkan
     public void QuitGame()
     {
         Debug.Log("Keluar game...");
