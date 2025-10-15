@@ -1,54 +1,50 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     public float maxHealth = 100f;
     public float currentHealth;
-    public HealthBar healthBar;  // Drag UI health bar di sini
 
-    [Header("Respawn Settings")]
-    public Transform spawnPoint; // Drag SpawnPoint ke sini di Inspector
+    [Header("References")]
+    public HealthBar healthBar;   // Drag dari inspector
 
-    private GameOverManager gameOverManager;
+    private bool isDead = false;
 
     void Start()
     {
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-        gameOverManager = FindObjectOfType<GameOverManager>();
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+        }
     }
 
     public void TakeDamage(float amount)
     {
-        currentHealth -= amount;
-        healthBar.SetHealth(currentHealth);
+        if (isDead) return;
 
-        if (currentHealth <= 0)
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth);
+        }
+
+        Debug.Log($"Health player sekarang: {currentHealth}");
+
+        if (currentHealth <= 0 && !isDead)
         {
             Die();
         }
     }
 
-    private void Die()
+    void Die()
     {
+        isDead = true;
         Debug.Log("Player mati!");
-        if (gameOverManager != null)
-        {
-            gameOverManager.ShowGameOver();
-        }
-    }
-
-    public void Respawn()
-    {
-        // Pulihkan nyawa
-        currentHealth = maxHealth;
-        healthBar.SetHealth(currentHealth);
-
-        // Pindahkan player ke titik spawn
-        transform.position = spawnPoint.position;
-
-        // Aktifkan kembali game
-        Time.timeScale = 1f;
+        SceneManager.LoadScene("GameOver");
     }
 }
