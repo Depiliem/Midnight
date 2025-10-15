@@ -5,8 +5,8 @@ using TMPro;
 
 public class Sc_npc : MonoBehaviour
 {
-    public GameObject d_template;
-    public GameObject canva;
+    public GameObject d_template;   // prefab dialog (background + text)
+    public GameObject canva;        // canvas tempat dialog
     bool player_detection = false;
 
     void Update()
@@ -16,7 +16,7 @@ public class Sc_npc : MonoBehaviour
             canva.SetActive(true);
             Sc_hero.dialogue = true;
 
-            // Hapus dulu dialog lama kalau ada sisa
+            // Hapus dialog lama jika ada
             foreach (Transform child in canva.transform)
             {
                 if (child.name.Contains("(Clone)"))
@@ -24,13 +24,16 @@ public class Sc_npc : MonoBehaviour
             }
 
             // Tambahkan dialog baru
-            NewDialogue("Hi!");
             NewDialogue("AndreGblk");
             NewDialogue("Senang bertemu denganmu di dunia Unity!");
 
-            // Aktifkan dialog pertama (child ke-1)
-            if (canva.transform.childCount > 1)
-                canva.transform.GetChild(1).gameObject.SetActive(true);
+            // Reset index dan aktifkan dialog pertama
+            Sc_Dialogue dialogueScript = canva.GetComponent<Sc_Dialogue>();
+            if (dialogueScript != null)
+            {
+                dialogueScript.index = 0;
+                dialogueScript.ShowNextDialogue(); // aktifkan dialog pertama
+            }
         }
     }
 
@@ -39,33 +42,26 @@ public class Sc_npc : MonoBehaviour
         // Clone prefab ke canvas
         GameObject template_clone = Instantiate(d_template, canva.transform);
 
-        // Cari TextMeshProUGUI di semua child, lebih aman daripada GetChild(1)
+        // Set text
         TextMeshProUGUI textUI = template_clone.GetComponentInChildren<TextMeshProUGUI>(true);
         if (textUI != null)
-        {
             textUI.text = text;
-        }
         else
-        {
             Debug.LogError("TextMeshProUGUI not found inside d_template prefab!");
-        }
 
-        template_clone.SetActive(false); // Disembunyikan dulu
+        // Biarkan tetap aktif dulu
+        template_clone.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "hero")
-        {
             player_detection = true;
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.name == "hero")
-        {
             player_detection = false;
-        }
     }
 }
