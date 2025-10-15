@@ -1,31 +1,28 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
-    public int maxHealth = 100;
-    public int currentHealth;
+    public float maxHealth = 100f;
+    public float currentHealth;
+    public HealthBar healthBar;  // Drag UI health bar di sini
 
-    [Header("UI Settings")]
-    public Slider healthSlider;
+    [Header("Respawn Settings")]
+    public Transform spawnPoint; // Drag SpawnPoint ke sini di Inspector
 
-    private void Start()
+    private GameOverManager gameOverManager;
+
+    void Start()
     {
         currentHealth = maxHealth;
-
-        if (healthSlider != null)
-        {
-            healthSlider.maxValue = maxHealth;
-            healthSlider.value = currentHealth;
-        }
+        healthBar.SetMaxHealth(maxHealth);
+        gameOverManager = FindObjectOfType<GameOverManager>();
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // batasi antara 0–maxHealth
-        healthSlider.value = currentHealth;
+        healthBar.SetHealth(currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -36,7 +33,22 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Player mati!");
-        // Tambahkan animasi, disable movement, atau reload scene kalau mau
+        if (gameOverManager != null)
+        {
+            gameOverManager.ShowGameOver();
+        }
     }
 
+    public void Respawn()
+    {
+        // Pulihkan nyawa
+        currentHealth = maxHealth;
+        healthBar.SetHealth(currentHealth);
+
+        // Pindahkan player ke titik spawn
+        transform.position = spawnPoint.position;
+
+        // Aktifkan kembali game
+        Time.timeScale = 1f;
+    }
 }
