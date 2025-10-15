@@ -245,7 +245,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 26022829}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 270803683}
+        m_TargetAssemblyTypeName: GameOverManager, Assembly-CSharp
+        m_MethodName: PlayAgain
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &26022829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,9 +1237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 465bd29672b3b9d46bfc1444318f84a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverUI: {fileID: 270803684}
-  playAgainButton: {fileID: 26022828}
-  fadeDuration: 0.5
+  gameOverUI: {fileID: 270803678}
+  playerHealth: {fileID: 903432978}
 --- !u!225 &270803684
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3757,7 +3768,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
-  healthSlider: {fileID: 1354193163}
+  healthBar: {fileID: 1354193164}
+  spawnPoint: {fileID: 2034087524}
 --- !u!1 &915813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -5372,6 +5384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1354193162}
   - component: {fileID: 1354193163}
+  - component: {fileID: 1354193164}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -5451,6 +5464,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1354193164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354193161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2780ebf693a87ce45be6402804212b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1354193163}
 --- !u!1001 &1369779721
 PrefabInstance:
   m_ObjectHideFlags: 0

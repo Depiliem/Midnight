@@ -1,80 +1,54 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
-    [Header("UI References")]
-    [SerializeField] private CanvasGroup gameOverUI;   // CanvasGroup dari GameOver UI
-    [SerializeField] private Button playAgainButton;   // Tombol restart
-    [SerializeField] private float fadeDuration = 0.5f;
-
-    private bool isGameOver = false;
+    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private PlayerHealth playerHealth;
 
     void Start()
     {
-        // Pastikan UI tidak aktif di awal
-        gameOverUI.alpha = 0;
-        gameOverUI.interactable = false;
-        gameOverUI.blocksRaycasts = false;
-
-        // Tambahkan listener ke tombol
-        playAgainButton.onClick.AddListener(RestartLevel);
+        gameOverUI.SetActive(false);
+        // Pastikan cursor disembunyikan saat bermain
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    /// <summary>
-    /// Dipanggil ketika player mati
-    /// </summary>
     public void ShowGameOver()
     {
-        if (isGameOver) return;
-        isGameOver = true;
-
-        // Munculkan UI dengan animasi fade
-        StartCoroutine(FadeInUI());
-
-        // Pause gameplay
+        gameOverUI.SetActive(true);
         Time.timeScale = 0f;
+
+        // Aktifkan kembali cursor supaya bisa klik
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    /// <summary>
-    /// Coroutine untuk efek fade-in halus
-    /// </summary>
-    private IEnumerator FadeInUI()
+    public void PlayAgain()
     {
-        float t = 0;
-        gameOverUI.interactable = true;
-        gameOverUI.blocksRaycasts = true;
-
-        while (t < fadeDuration)
-        {
-            t += Time.unscaledDeltaTime; // gunakan unscaledDeltaTime karena game dipause
-            gameOverUI.alpha = Mathf.Lerp(0, 1, t / fadeDuration);
-            yield return null;
-        }
-
-        gameOverUI.alpha = 1;
-    }
-
-    /// <summary>
-    /// Restart scene ketika tombol Play Again ditekan
-    /// </summary>
-    private void RestartLevel()
-    {
+        // Pulihkan waktu
         Time.timeScale = 1f;
-        PlayerHealth player = FindObjectOfType<PlayerHealth>();
 
-        if (player != null)
-        {
-            player.Respawn();
-        }
+        // Sembunyikan UI Game Over
+        gameOverUI.SetActive(false);
 
-        // Tutup UI GameOver
-        gameOverUI.alpha = 0;
-        gameOverUI.interactable = false;
-        gameOverUI.blocksRaycasts = false;
-        isGameOver = false;
+        // Respawn player
+        playerHealth.Respawn();
+
+        // Sembunyikan cursor lagi
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
+    public void GoToMainMenu()
+    {
+        // Pastikan waktu normal lagi sebelum ganti scene
+        Time.timeScale = 1f;
+
+        // Tampilkan cursor di menu
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        SceneManager.LoadScene("MainMenu");
+    }
 }
