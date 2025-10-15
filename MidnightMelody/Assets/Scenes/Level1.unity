@@ -2507,10 +2507,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acefc40e471c444799654e3f8309fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 530508651}
   laserDistance: 9.5
-  damageAmount: 25
+  damage: 25
   damageCooldown: 1
+  lineRenderer: {fileID: 530508651}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2804,10 +2804,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acefc40e471c444799654e3f8309fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 553973764}
   laserDistance: 9.5
-  damageAmount: 25
+  damage: 25
   damageCooldown: 1
+  lineRenderer: {fileID: 553973764}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -4194,7 +4194,6 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 100
   healthBar: {fileID: 1354193164}
-  spawnPoint: {fileID: 2034087524}
 --- !u!1 &915813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -6998,10 +6997,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acefc40e471c444799654e3f8309fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 1634632342}
   laserDistance: 11
-  damageAmount: 25
+  damage: 25
   damageCooldown: 1
+  lineRenderer: {fileID: 1634632342}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -7368,10 +7367,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acefc40e471c444799654e3f8309fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 1700962252}
   laserDistance: 11
-  damageAmount: 25
+  damage: 25
   damageCooldown: 1
+  lineRenderer: {fileID: 1700962252}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
