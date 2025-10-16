@@ -11,6 +11,7 @@ public class Sc_hero : MonoBehaviour
 
     [Header("Jump Settings")]
     public float jumpForce = 7f;
+    [SerializeField] private float fallMultiplier = 3.5f; // makin besar makin cepat jatuh
 
     public static bool dialogue = false;
 
@@ -28,7 +29,7 @@ public class Sc_hero : MonoBehaviour
     {
         if (dialogue) return;
 
-        // tekan spasi untuk lompat
+        // Tekan spasi untuk lompat (hanya jika tidak sedang melompat)
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
         {
             Lompat();
@@ -37,6 +38,12 @@ public class Sc_hero : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Tambahan gaya jatuh biar lebih realistis
+        if (isJumping && rb.velocity.y < 0)
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+
         if (!dialogue)
         {
             GerakanType3();
@@ -76,10 +83,28 @@ public class Sc_hero : MonoBehaviour
     {
         isJumping = true;
         HeroAniCont.SetBool("isJump", true);
+
+        // Reset velocity biar loncatan konsisten
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+    // 🔹 Auto deteksi "mendarat" tanpa tag
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Cek arah benturan: kalau normal-nya mengarah ke atas (tanah di bawah karakter)
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
+            {
+                isJumping = false;
+                HeroAniCont.SetBool("isJump", false);
+                break;
+            }
+        }
+    }
+
+    // 🔹 Optional: Animation Event di akhir animasi lompat
     public void ResetJump()
     {
         isJumping = false;
