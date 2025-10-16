@@ -4,19 +4,38 @@ using UnityEngine;
 
 public class Sc_hero : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float speed = 5f;
     public float runSpeed = 7.5f;
     public float rotationSpeed = 10f;
-    public static bool dialogue = false; // biar bisa diakses dari mana pun
 
-    Animator HeroAniCont;
+    [Header("Jump Settings")]
+    public float jumpForce = 7f;
+
+    public static bool dialogue = false;
+
+    private Animator HeroAniCont;
+    private Rigidbody rb;
+    private bool isJumping = false;
 
     void Start()
     {
         HeroAniCont = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
+    {
+        if (dialogue) return;
+
+        // tekan spasi untuk lompat
+        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
+        {
+            Lompat();
+        }
+    }
+
+    void FixedUpdate()
     {
         if (!dialogue)
         {
@@ -43,12 +62,27 @@ public class Sc_hero : MonoBehaviour
         }
 
         float currentSpeed = isRunning ? runSpeed : speed;
-
         Vector3 moveDir = (Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * v) +
                           (Vector3.ProjectOnPlane(Camera.main.transform.right, Vector3.up) * h);
-        transform.position += moveDir.normalized * currentSpeed * Time.deltaTime;
+
+        Vector3 newPos = rb.position + moveDir.normalized * currentSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(newPos);
 
         HeroAniCont.SetBool("isWalk", isMoving && !isRunning);
         HeroAniCont.SetBool("isRun", isRunning);
+    }
+
+    void Lompat()
+    {
+        isJumping = true;
+        HeroAniCont.SetBool("isJump", true);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    public void ResetJump()
+    {
+        isJumping = false;
+        HeroAniCont.SetBool("isJump", false);
     }
 }
