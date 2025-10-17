@@ -22,7 +22,7 @@ public class Sc_camera : MonoBehaviour
         desiredOffset = offset;
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (!Sc_hero.dialogue)
         {

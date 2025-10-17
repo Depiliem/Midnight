@@ -24,8 +24,8 @@ public class Sc_npc : MonoBehaviour
             }
 
             // Tambahkan dialog baru
-            NewDialogue("AndreGblk");
-            NewDialogue("Senang bertemu denganmu di dunia Unity!");
+            NewDialogue("Please help me recover this world melody");
+            NewDialogue("Help me finde the 3 note in order to save this world!");
 
             // Reset index dan aktifkan dialog pertama
             Sc_Dialogue dialogueScript = canva.GetComponent<Sc_Dialogue>();

@@ -11,13 +11,15 @@ public class Sc_hero : MonoBehaviour
 
     [Header("Jump Settings")]
     public float jumpForce = 7f;
-    [SerializeField] private float fallMultiplier = 3.5f; // makin besar makin cepat jatuh
+    [SerializeField] private float fallMultiplier = 3.5f; // semakin besar makin cepat jatuh
+    [SerializeField] private float groundCheckDistance = 0.25f; // jarak deteksi tanah
 
     public static bool dialogue = false;
 
     private Animator HeroAniCont;
     private Rigidbody rb;
     private bool isJumping = false;
+    private bool isGrounded = true;
 
     void Start()
     {
@@ -29,11 +31,14 @@ public class Sc_hero : MonoBehaviour
     {
         if (dialogue) return;
 
-        // Tekan spasi untuk lompat (hanya jika tidak sedang melompat)
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
+        // Lompat hanya jika di tanah
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Lompat();
         }
+
+        // Cek kalau mendarat
+        CekTanah();
     }
 
     void FixedUpdate()
@@ -62,41 +67,67 @@ public class Sc_hero : MonoBehaviour
         bool isMoving = targetDirection.magnitude > 0.1f;
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && isMoving;
 
+        // Rotasi hanya kalau bergerak
         if (isMoving)
         {
             Quaternion targetRot = Quaternion.LookRotation(targetDirection, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
 
-        float currentSpeed = isRunning ? runSpeed : speed;
-        Vector3 moveDir = (Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * v) +
-                          (Vector3.ProjectOnPlane(Camera.main.transform.right, Vector3.up) * h);
+        // Gerakan
+        if (isMoving)
+        {
+            float currentSpeed = isRunning ? runSpeed : speed;
+            Vector3 moveDir = (Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * v) +
+                              (Vector3.ProjectOnPlane(Camera.main.transform.right, Vector3.up) * h);
 
-        Vector3 newPos = rb.position + moveDir.normalized * currentSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(newPos);
+            Vector3 newPos = rb.position + moveDir.normalized * currentSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(newPos);
+        }
 
-        HeroAniCont.SetBool("isWalk", isMoving && !isRunning);
-        HeroAniCont.SetBool("isRun", isRunning);
+        // Update animasi
+        HeroAniCont.SetBool("isWalk", isMoving && !isRunning && isGrounded);
+        HeroAniCont.SetBool("isRun", isRunning && isGrounded);
     }
 
     void Lompat()
     {
         isJumping = true;
+        isGrounded = false;
         HeroAniCont.SetBool("isJump", true);
 
-        // Reset velocity biar loncatan konsisten
+        // Reset velocity biar loncatannya konsisten
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    // 🔹 Auto deteksi "mendarat" tanpa tag
+    void CekTanah()
+    {
+        // Raycast dari posisi karakter ke bawah
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance))
+        {
+            if (!isGrounded && rb.velocity.y <= 0)
+            {
+                // baru mendarat
+                isGrounded = true;
+                isJumping = false;
+                HeroAniCont.SetBool("isJump", false);
+            }
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        // Cek arah benturan: kalau normal-nya mengarah ke atas (tanah di bawah karakter)
+        // fallback kalau raycast gagal
         foreach (ContactPoint contact in collision.contacts)
         {
             if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
             {
+                isGrounded = true;
                 isJumping = false;
                 HeroAniCont.SetBool("isJump", false);
                 break;
@@ -104,7 +135,7 @@ public class Sc_hero : MonoBehaviour
         }
     }
 
-    // 🔹 Optional: Animation Event di akhir animasi lompat
+    // Optional: Animation Event di akhir animasi lompat
     public void ResetJump()
     {
         isJumping = false;
