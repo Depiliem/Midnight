@@ -9,12 +9,10 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Level1");
     }
-
-    public void GoToSettingsMenu()
+    public void OpenOptions()
     {
-        SceneManager.LoadScene("SettingsMenu");
+        SceneManager.LoadScene("Options");
     }
-
     public void GoToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
@@ -23,5 +21,10 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quit Game");
+    }
+
+    public void OpenCredit()
+    {
+        SceneManager.LoadScene("Credit");
     }
 }
