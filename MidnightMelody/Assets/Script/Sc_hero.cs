@@ -30,20 +30,15 @@ public class Sc_hero : MonoBehaviour
     void Update()
     {
         if (dialogue) return;
-
-        // Lompat hanya jika di tanah
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Lompat();
         }
-
-        // Cek kalau mendarat
         CekTanah();
     }
 
     void FixedUpdate()
     {
-        // Tambahan gaya jatuh biar lebih realistis
         if (isJumping && rb.velocity.y < 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
@@ -66,15 +61,11 @@ public class Sc_hero : MonoBehaviour
 
         bool isMoving = targetDirection.magnitude > 0.1f;
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && isMoving;
-
-        // Rotasi hanya kalau bergerak
         if (isMoving)
         {
             Quaternion targetRot = Quaternion.LookRotation(targetDirection, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
-
-        // Gerakan
         if (isMoving)
         {
             float currentSpeed = isRunning ? runSpeed : speed;
@@ -84,8 +75,6 @@ public class Sc_hero : MonoBehaviour
             Vector3 newPos = rb.position + moveDir.normalized * currentSpeed * Time.fixedDeltaTime;
             rb.MovePosition(newPos);
         }
-
-        // Update animasi
         HeroAniCont.SetBool("isWalk", isMoving && !isRunning && isGrounded);
         HeroAniCont.SetBool("isRun", isRunning && isGrounded);
     }
@@ -95,20 +84,16 @@ public class Sc_hero : MonoBehaviour
         isJumping = true;
         isGrounded = false;
         HeroAniCont.SetBool("isJump", true);
-
-        // Reset velocity biar loncatannya konsisten
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     void CekTanah()
     {
-        // Raycast dari posisi karakter ke bawah
         if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance))
         {
             if (!isGrounded && rb.velocity.y <= 0)
             {
-                // baru mendarat
                 isGrounded = true;
                 isJumping = false;
                 HeroAniCont.SetBool("isJump", false);
@@ -122,7 +107,6 @@ public class Sc_hero : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // fallback kalau raycast gagal
         foreach (ContactPoint contact in collision.contacts)
         {
             if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
@@ -134,8 +118,6 @@ public class Sc_hero : MonoBehaviour
             }
         }
     }
-
-    // Optional: Animation Event di akhir animasi lompat
     public void ResetJump()
     {
         isJumping = false;
