@@ -25,21 +25,27 @@ public class Sc_hero : MonoBehaviour
     {
         HeroAniCont = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
     }
 
     void Update()
     {
         if (dialogue) return;
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Lompat();
         }
-        CekTanah();
+        else
+        {
+     
+            CekTanah();
+        }
     }
 
     void FixedUpdate()
     {
-        if (isJumping && rb.velocity.y < 0)
+        if (rb.velocity.y < 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
@@ -90,10 +96,13 @@ public class Sc_hero : MonoBehaviour
 
     void CekTanah()
     {
+        // Gunakan Raycast untuk mengecek tanah
         if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance))
         {
-            if (!isGrounded && rb.velocity.y <= 0)
+            // (Ganti rb.velocity.y <= 0 menjadi < -0.1f untuk keamanan ekstra)
+            if (!isGrounded && rb.velocity.y < -0.1f) 
             {
+                // Maka kita mendarat
                 isGrounded = true;
                 isJumping = false;
                 HeroAniCont.SetBool("isJump", false);
@@ -101,23 +110,11 @@ public class Sc_hero : MonoBehaviour
         }
         else
         {
+            // Jika raycast tidak kena apa-apa, kita di udara
             isGrounded = false;
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
-            {
-                isGrounded = true;
-                isJumping = false;
-                HeroAniCont.SetBool("isJump", false);
-                break;
-            }
-        }
-    }
+    
     public void ResetJump()
     {
         isJumping = false;
