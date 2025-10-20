@@ -5,14 +5,14 @@ using UnityEngine;
 public class Sc_hero : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float speed = 5f;
-    public float runSpeed = 7.5f;
+    public float speed = 4f;
+    public float runSpeed = 6.5f;
     public float rotationSpeed = 10f;
 
     [Header("Jump Settings")]
     public float jumpForce = 7f;
-    [SerializeField] private float fallMultiplier = 3.5f; // semakin besar makin cepat jatuh
-    [SerializeField] private float groundCheckDistance = 0.25f; // jarak deteksi tanah
+    [SerializeField] private float fallMultiplier = 3.5f;
+    [SerializeField] private float groundCheckDistance = 0.25f;
 
     public static bool dialogue = false;
 
@@ -25,7 +25,6 @@ public class Sc_hero : MonoBehaviour
     {
         HeroAniCont = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-
     }
 
     void Update()
@@ -38,7 +37,8 @@ public class Sc_hero : MonoBehaviour
         }
         else
         {
-     
+            // Cek tanah dijalankan di 'else' agar tidak konflik
+            // di frame yang sama saat melompat.
             CekTanah();
         }
     }
@@ -94,23 +94,30 @@ public class Sc_hero : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+    // --- FUNGSI YANG DIPERBAIKI ---
     void CekTanah()
     {
-        // Gunakan Raycast untuk mengecek tanah
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance))
+        // 1. Lakukan Raycast
+        bool raycastHit = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance);
+
+        if (raycastHit)
         {
-            // (Ganti rb.velocity.y <= 0 menjadi < -0.1f untuk keamanan ekstra)
-            if (!isGrounded && rb.velocity.y < -0.1f) 
+            // 2. Jika Raycast kena, kita PASTI di tanah.
+            //    Ini akan langsung memperbaiki bug "stuck".
+            isGrounded = true; 
+
+            // 3. SEKARANG, baru kita urus animasi pendaratan.
+            //    Kita cek 'isJumping', flag yang kita set 'true' saat Lompat().
+            if (isJumping && rb.velocity.y < -0.1f)
             {
-                // Maka kita mendarat
-                isGrounded = true;
+                // Kita sedang dalam proses lompat, dan sekarang kita mendarat.
                 isJumping = false;
                 HeroAniCont.SetBool("isJump", false);
             }
         }
         else
         {
-            // Jika raycast tidak kena apa-apa, kita di udara
+            // 4. Jika Raycast tidak kena, kita PASTI di udara.
             isGrounded = false;
         }
     }
