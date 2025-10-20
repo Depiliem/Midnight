@@ -11,6 +11,12 @@ public class Sc_camera : MonoBehaviour
     public float minDistance = 1f;       // jarak minimal kamera ke hero
     public float smoothSpeed = 10f;      // kecepatan smoothing kamera
 
+    // --- BARU: Variabel untuk batas atas/bawah ---
+    [Header("Camera View Limits")]
+    public float minYAngle = -20.0f; // Batas melihat ke bawah (negatif)
+    public float maxYAngle = 70.0f;  // Batas melihat ke atas (positif)
+    // ---------------------------------------------
+
     private Vector3 desiredOffset;
 
     void Start()
@@ -26,9 +32,41 @@ public class Sc_camera : MonoBehaviour
     {
         if (!Sc_hero.dialogue)
         {
-            // Rotasi horizontal offset berdasarkan mouse
+            // --- MODIFIKASI: Input Horizontal & Vertikal ---
+
+            // 1. Rotasi horizontal (Kiri/Kanan) - Ini sudah ada
             float mouseX = Input.GetAxis("Mouse X") * turnSpeed;
             desiredOffset = Quaternion.AngleAxis(mouseX, Vector3.up) * desiredOffset;
+
+            // 2. Rotasi vertikal (Atas/Bawah)
+            float mouseY = Input.GetAxis("Mouse Y") * turnSpeed;
+            
+            // Simpan offset lama jika rotasi baru gagal (karena clamp)
+            Vector3 oldOffset = desiredOffset; 
+
+            // Terapkan rotasi vertikal. Kita pakai 'transform.right' (sumbu kanan lokal kamera)
+            // Tanda negatif (-) agar mouse ke atas = kamera ke atas (standard, bukan inverted)
+            desiredOffset = Quaternion.AngleAxis(-mouseY, transform.right) * desiredOffset;
+
+            // 3. Clamping (Batasan)
+            // Kita cek sudut baru dari 'desiredOffset' relatif terhadap 'Vector3.up' (sumbu Y dunia)
+            // Sudut 90 = horizontal. 0 = lurus ke atas. 180 = lurus ke bawah.
+            float angle = Vector3.Angle(Vector3.up, desiredOffset);
+
+            // Kita ubah minYAngle dan maxYAngle menjadi rentang 0-180
+            // Contoh: maxYAngle 70 (ke atas) -> 90 - 70 = 20 derajat dari sumbu Y
+            // Contoh: minYAngle -20 (ke bawah) -> 90 - (-20) = 110 derajat dari sumbu Y
+            float minVerticalAngle = 90.0f - maxYAngle; 
+            float maxVerticalAngle = 90.0f - minYAngle;
+
+            // Jika sudut baru di luar batas, batalkan rotasi vertikal
+            if (angle < minVerticalAngle || angle > maxVerticalAngle)
+            {
+                // Batal, kembali ke offset sebelum rotasi vertikal
+                desiredOffset = oldOffset; 
+            }
+            
+            // ---------------------------------------------------
 
             // Posisi kamera sebelum raytracing
             Vector3 desiredPos = posHero.position + desiredOffset;

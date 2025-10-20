@@ -13,18 +13,18 @@ public class ChallengeZone : MonoBehaviour
     public CanvasGroup redFlash;
 
     [Header("Challenge Settings")]
-    public int stopAtNoteCount = 1;       // 🔸 Berhenti setelah berapa note diambil
-    public TextMeshProUGUI completeText;  // 🔸 Teks "Challenge Complete!" opsional
+    public int stopAtNoteCount = 1;     
+    public TextMeshProUGUI completeText; 
 
     [Header("Timing")]
     public float countdown = 3f;
-    public float greenDuration = 3f;
+    public float greenDuration = 2.6f;
     public float redDuration = 3f;
 
     [Header("Movement Detection")]
     public float moveThreshold = 0.05f;
     public int redDamage = 25;
-    public float gracePeriod = 0.3f;      // 🔸 Waktu aman di awal red light
+    public float gracePeriod = 0.3f;    
 
     private bool challengeStarted = false;
     private bool inRed = false;
@@ -44,10 +44,9 @@ public class ChallengeZone : MonoBehaviour
         if (challengeStarted) return;
         if (other.transform != player) return;
 
-        // Cegah mulai sebelum bicara dengan NPC
         if (!Sc_npc.HasTalkedToNpc)
         {
-            Debug.Log("🚫 Player belum bicara dengan NPC!");
+            Debug.Log(" Player belum bicara dengan NPC!");
             return;
         }
 
@@ -57,7 +56,6 @@ public class ChallengeZone : MonoBehaviour
 
     IEnumerator StartChallenge()
     {
-        // === 1️⃣ Lock player movement ===
         if (playerMovement) playerMovement.enabled = false;
 
         if (countdownText)
@@ -73,7 +71,6 @@ public class ChallengeZone : MonoBehaviour
             countdownText.gameObject.SetActive(false);
         }
 
-        // === 2️⃣ Unlock movement, mulai looping ===
         if (playerMovement) playerMovement.enabled = true;
         challengeActive = true;
         StartCoroutine(GameLoop());
