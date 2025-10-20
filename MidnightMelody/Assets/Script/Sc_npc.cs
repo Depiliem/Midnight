@@ -99,12 +99,12 @@ public class Sc_npc : MonoBehaviour
 
         Debug.Log("Quest complete dialogue finished. Loading Victory scene!");
         
-        // --- PERBAIKAN ---
-        // Tampilkan dan buka kunci kursor SEBELUM pindah scene
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        // -----------------
+        // --- INI DIA BAGIAN PENTINGNYA ---
+        Cursor.lockState = CursorLockMode.None; // Buka kunci kursor
+        Cursor.visible = true;                  // Tampilkan kursor
+        // ------------------------------------
 
+        // Pindah ke scene Victory
         SceneManager.LoadScene("Victory");
     }
     
