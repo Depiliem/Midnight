@@ -91,7 +91,6 @@ public class QuestManager : MonoBehaviour
             questText.text = "";
     }
 
-    // Dipakai oleh ChallengeZone untuk mengecek apakah semua note sudah diambil
     public bool AllNotesCollected()
     {
         return notesCollected >= totalNotes;
