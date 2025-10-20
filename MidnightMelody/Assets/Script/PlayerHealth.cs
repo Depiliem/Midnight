@@ -9,12 +9,12 @@ public class PlayerHealth : MonoBehaviour
     [HideInInspector] public float currentHealth;
 
     [Header("References")]
-    public HealthBar healthBar;      // Drag dari inspector
-    private Animator animator;       // referensi animator hero
-    private Sc_hero heroScript;      // referensi script hero
+    public HealthBar healthBar; 
+    private Animator animator; 
+    private Sc_hero heroScript;    
 
     private bool isDead = false;
-    private float damageAnimTime = 0.3f; // durasi animasi damage
+    private float damageAnimTime = 0.3f;
 
     void Start()
     {
@@ -37,9 +37,7 @@ public class PlayerHealth : MonoBehaviour
         if (healthBar != null)
             healthBar.SetHealth(currentHealth);
 
-        Debug.Log($"❤️ Health player sekarang: {currentHealth}");
-
-        // 🔹 Trigger animasi damage
+        Debug.Log($" Health player sekarang: {currentHealth}");
         if (animator != null)
             animator.SetTrigger("isDamage");
 
@@ -77,8 +75,6 @@ public class PlayerHealth : MonoBehaviour
         // 🔹 Trigger animasi kematian
         if (animator != null)
             animator.SetBool("isDead", true);
-
-        // 🔹 Pindah ke GameOver setelah delay
         StartCoroutine(GoToGameOver());
     }
 
