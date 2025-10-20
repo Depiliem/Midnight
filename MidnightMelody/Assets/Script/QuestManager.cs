@@ -8,7 +8,7 @@ public class QuestManager : MonoBehaviour
     public static QuestManager instance;
 
     [Header("Quest Settings")]
-    public int totalNotes = 2;            // total note yang harus dikumpulkan
+    public int totalNotes = 2;            // ⚠️ PASTIKAN INI BERNILAI 2 DI INSPECTOR
     [HideInInspector] public int notesCollected = 0;
     public bool questActive = false;
 
@@ -26,6 +26,11 @@ public class QuestManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        // --- PERBAIKAN: Tambahkan Listener ---
+        // Suruh QuestManager untuk "mendengarkan" event OnTalkStarted dari Sc_npc
+        Sc_npc.OnTalkStarted += StartQuest;
+        // ------------------------------------
 
         // Kalau belum diassign manual, cari canvas otomatis
         if (questText == null)
@@ -45,9 +50,20 @@ public class QuestManager : MonoBehaviour
             Debug.LogWarning("⚠TextMeshProUGUI questText belum di-assign di Inspector!");
     }
 
-    // Mulai quest
+    // --- PERBAIKAN: Tambahkan OnDestroy ---
+    // Ini untuk membersihkan listener saat objek hancur
+    private void OnDestroy()
+    {
+        Sc_npc.OnTalkStarted -= StartQuest;
+    }
+    // ------------------------------------
+
+    // Mulai quest (Fungsi ini sekarang dipanggil oleh event dari Sc_npc)
     public void StartQuest()
     {
+        // Cek agar tidak me-reset jika sudah aktif
+        if (questActive) return; 
+        
         notesCollected = 0;
         questActive = true;
         UpdateQuestUI();
@@ -75,7 +91,7 @@ public class QuestManager : MonoBehaviour
     {
         questActive = false;
         if (questText != null)
-            questText.text = "<color=#00FF77>Quest Complete!</color>";
+            questText.text = "<color=#00FF77>Quest Complete!\nreturn to NPC</color>";
 
         Debug.Log("✅ Quest completed! Semua note telah dikumpulkan.");
     }
