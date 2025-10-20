@@ -25,26 +25,32 @@ public class Sc_hero : MonoBehaviour
     {
         HeroAniCont = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        
+        // PENTING: Pastikan juga Rigidbody di Inspector punya:
+        // 1. Drag = 0
+        // 2. Interpolate = Interpolate (untuk fix stutter kamera)
+        // 3. Freeze Rotation di X dan Z
     }
 
     void Update()
     {
         if (dialogue) return;
 
+        // Logika "else" ini penting untuk mencegah konflik
+        // antara Lompat() dan CekTanah() di frame yang sama.
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Lompat();
         }
         else
         {
-            // Cek tanah dijalankan di 'else' agar tidak konflik
-            // di frame yang sama saat melompat.
             CekTanah();
         }
     }
 
     void FixedUpdate()
     {
+        // Selalu terapkan fallMultiplier jika sedang jatuh
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
@@ -67,11 +73,16 @@ public class Sc_hero : MonoBehaviour
 
         bool isMoving = targetDirection.magnitude > 0.1f;
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && isMoving;
+        
         if (isMoving)
         {
             Quaternion targetRot = Quaternion.LookRotation(targetDirection, Vector3.up);
+            // Menggunakan Time.deltaTime di sini oke, tapi lebih baik
+            // memindahkan rotasi ke FixedUpdate dan menggunakan rb.MoveRotation()
+            // Tapi untuk saat ini, ini tidak masalah.
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
+        
         if (isMoving)
         {
             float currentSpeed = isRunning ? runSpeed : speed;
@@ -81,6 +92,7 @@ public class Sc_hero : MonoBehaviour
             Vector3 newPos = rb.position + moveDir.normalized * currentSpeed * Time.fixedDeltaTime;
             rb.MovePosition(newPos);
         }
+        
         HeroAniCont.SetBool("isWalk", isMoving && !isRunning && isGrounded);
         HeroAniCont.SetBool("isRun", isRunning && isGrounded);
     }
@@ -94,7 +106,6 @@ public class Sc_hero : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    // --- FUNGSI YANG DIPERBAIKI ---
     void CekTanah()
     {
         // 1. Lakukan Raycast
@@ -103,14 +114,13 @@ public class Sc_hero : MonoBehaviour
         if (raycastHit)
         {
             // 2. Jika Raycast kena, kita PASTI di tanah.
-            //    Ini akan langsung memperbaiki bug "stuck".
+            //    Ini memperbaiki bug "stuck".
             isGrounded = true; 
 
-            // 3. SEKARANG, baru kita urus animasi pendaratan.
-            //    Kita cek 'isJumping', flag yang kita set 'true' saat Lompat().
+            // 3. Cek untuk mendaratkan animasi
+            //    Kita cek 'isJumping' (flag dari Lompat())
             if (isJumping && rb.velocity.y < -0.1f)
             {
-                // Kita sedang dalam proses lompat, dan sekarang kita mendarat.
                 isJumping = false;
                 HeroAniCont.SetBool("isJump", false);
             }

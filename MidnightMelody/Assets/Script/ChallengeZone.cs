@@ -13,23 +13,27 @@ public class ChallengeZone : MonoBehaviour
     public CanvasGroup redFlash;
 
     [Header("Challenge Settings")]
-    public int stopAtNoteCount = 1;       // 🔸 Berhenti setelah berapa note diambil
-    public TextMeshProUGUI completeText;  // 🔸 Teks "Challenge Complete!" opsional
+    public int stopAtNoteCount = 1;      // Berapa note yang harus diambil DI DALAM challenge ini
+    public TextMeshProUGUI completeText; 
 
     [Header("Timing")]
     public float countdown = 3f;
-    public float greenDuration = 3f;
+    public float greenDuration = 2.6f;
     public float redDuration = 3f;
 
     [Header("Movement Detection")]
     public float moveThreshold = 0.05f;
     public int redDamage = 25;
-    public float gracePeriod = 0.3f;      // 🔸 Waktu aman di awal red light
+    public float gracePeriod = 0.3f;    
 
     private bool challengeStarted = false;
     private bool inRed = false;
     private bool challengeActive = false;
     private Vector3 lastPos;
+
+    // --- PERBAIKAN 1 ---
+    // Variabel untuk mencatat jumlah note saat challenge dimulai
+    private int notesAtChallengeStart;
 
     void Start()
     {
@@ -44,10 +48,10 @@ public class ChallengeZone : MonoBehaviour
         if (challengeStarted) return;
         if (other.transform != player) return;
 
-        // Cegah mulai sebelum bicara dengan NPC
+        // Cek ini tetap di sini untuk mencegah challenge dimulai
         if (!Sc_npc.HasTalkedToNpc)
         {
-            Debug.Log("🚫 Player belum bicara dengan NPC!");
+            Debug.Log("Player belum bicara dengan NPC!");
             return;
         }
 
@@ -57,7 +61,6 @@ public class ChallengeZone : MonoBehaviour
 
     IEnumerator StartChallenge()
     {
-        // === 1️⃣ Lock player movement ===
         if (playerMovement) playerMovement.enabled = false;
 
         if (countdownText)
@@ -73,9 +76,22 @@ public class ChallengeZone : MonoBehaviour
             countdownText.gameObject.SetActive(false);
         }
 
-        // === 2️⃣ Unlock movement, mulai looping ===
         if (playerMovement) playerMovement.enabled = true;
         challengeActive = true;
+        
+        // --- PERBAIKAN 2 ---
+        // Catat jumlah note yang dimiliki player TEPAT SAAT challenge dimulai
+        if (QuestManager.instance != null)
+        {
+            notesAtChallengeStart = QuestManager.instance.notesCollected;
+        }
+        else
+        {
+            notesAtChallengeStart = 0;
+            Debug.LogWarning("QuestManager not found, starting note count at 0.");
+        }
+        // ---------------------
+
         StartCoroutine(GameLoop());
     }
 
@@ -120,11 +136,13 @@ public class ChallengeZone : MonoBehaviour
                 timer -= Time.deltaTime;
                 yield return null;
 
-                // 🔹 Berhenti kalau note sudah diambil
-                if (QuestManager.instance != null && QuestManager.instance.notesCollected >= stopAtNoteCount)
+                // --- PERBAIKAN 3 ---
+                // Cek apakah jumlah note SEKARANG dikurangi jumlah note AWAL
+                // sudah mencapai target 'stopAtNoteCount'.
+                if (QuestManager.instance != null && (QuestManager.instance.notesCollected - notesAtChallengeStart) >= stopAtNoteCount)
                 {
                     EndChallenge();
-                    yield break;
+                    yield break; // Keluar dari coroutine
                 }
             }
 
