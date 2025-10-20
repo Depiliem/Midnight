@@ -15,6 +15,7 @@ public class NoteCollectible : MonoBehaviour
     {
         // Simpan posisi awal agar gerakan naik-turun relatif terhadap titik awal
         startPos = transform.position;
+        gameObject.SetActive(false);
     }
 
     private void Update()

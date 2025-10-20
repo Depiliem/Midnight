@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -8,6 +8,8 @@ public class Sc_npc : MonoBehaviour
     public GameObject d_template;   // prefab dialog (background + text)
     public GameObject canva;        // canvas tempat dialog
     bool player_detection = false;
+
+    private bool hasTriggeredNotes = false; // 🔹 Tambahan supaya note hanya muncul sekali
 
     void Update()
     {
@@ -25,31 +27,35 @@ public class Sc_npc : MonoBehaviour
 
             // Tambahkan dialog baru
             NewDialogue("Please help me recover this world melody");
-            NewDialogue("Help me finde the 3 note in order to save this world!");
+            NewDialogue("Help me find the 3 notes to save this world!");
 
             // Reset index dan aktifkan dialog pertama
             Sc_Dialogue dialogueScript = canva.GetComponent<Sc_Dialogue>();
             if (dialogueScript != null)
             {
                 dialogueScript.index = 0;
-                dialogueScript.ShowNextDialogue(); // aktifkan dialog pertama
+                dialogueScript.ShowNextDialogue();
+            }
+
+            // 🔹 Setelah dialog pertama kali aktif, munculkan note
+            if (!hasTriggeredNotes)
+            {
+                ShowAllNotes();
+                hasTriggeredNotes = true;
             }
         }
     }
 
     void NewDialogue(string text)
     {
-        // Clone prefab ke canvas
         GameObject template_clone = Instantiate(d_template, canva.transform);
 
-        // Set text
         TextMeshProUGUI textUI = template_clone.GetComponentInChildren<TextMeshProUGUI>(true);
         if (textUI != null)
             textUI.text = text;
         else
             Debug.LogError("TextMeshProUGUI not found inside d_template prefab!");
 
-        // Biarkan tetap aktif dulu
         template_clone.SetActive(true);
     }
 
@@ -63,5 +69,17 @@ public class Sc_npc : MonoBehaviour
     {
         if (other.name == "hero")
             player_detection = false;
+    }
+
+    // 🔹 Tambahan fungsi untuk menampilkan semua note
+    void ShowAllNotes()
+    {
+        NoteCollectible[] allNotes = FindObjectsOfType<NoteCollectible>(true); // cari semua, termasuk yang nonaktif
+        foreach (NoteCollectible note in allNotes)
+        {
+            note.gameObject.SetActive(true);
+        }
+
+        Debug.Log($"✅ {allNotes.Length} notes have been activated!");
     }
 }
