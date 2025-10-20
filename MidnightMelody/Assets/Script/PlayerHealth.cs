@@ -38,15 +38,17 @@ public class PlayerHealth : MonoBehaviour
             healthBar.SetHealth(currentHealth);
 
         Debug.Log($" Health player sekarang: {currentHealth}");
-        if (animator != null)
-            animator.SetTrigger("isDamage");
-
+        
         if (currentHealth <= 0 && !isDead)
         {
-            Die();
+            Die(); // Panggil fungsi Die() yang baru
         }
         else
         {
+            // Hanya mainkan animasi damage jika belum mati
+            if (animator != null)
+                animator.SetTrigger("isDamage");
+                
             StartCoroutine(ResetDamageState());
         }
     }
@@ -58,29 +60,38 @@ public class PlayerHealth : MonoBehaviour
             animator.ResetTrigger("isDamage");
     }
 
+    // --- FUNGSI DIE() YANG DIPERBARUI ---
     private void Die()
     {
         isDead = true;
-        Debug.Log("💀 Player mati!");
+        Debug.Log("💀 Player mati! Memuat scene GameOver...");
 
-        // 🔹 Hentikan pergerakan player
-        if (heroScript != null)
-            heroScript.enabled = false;
+        // --- DIHAPUS ---
+        // Kita tidak perlu menghentikan player atau memainkan animasi
+        // karena scene akan langsung berganti.
+        // if (heroScript != null)
+        //     heroScript.enabled = false;
+        // var rb = GetComponent<Rigidbody>();
+        // if (rb != null)
+        //     rb.velocity = Vector3.zero;
+        // if (animator != null)
+        //     animator.SetBool("isDead", true);
+        // StartCoroutine(GoToGameOver());
+        // ---------------
 
-        // 🔹 Matikan input atau kontrol lain jika ada
-        var rb = GetComponent<Rigidbody>();
-        if (rb != null)
-            rb.velocity = Vector3.zero;
+        // --- BARU ---
+        // Aktifkan kursor agar bisa dipakai di menu GameOver
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
-        // 🔹 Trigger animasi kematian
-        if (animator != null)
-            animator.SetBool("isDead", true);
-        StartCoroutine(GoToGameOver());
-    }
-
-    private IEnumerator GoToGameOver()
-    {
-        yield return new WaitForSeconds(2.5f); // waktu animasi mati
+        // Langsung muat scene GameOver
         SceneManager.LoadScene("GameOver");
     }
+
+    // --- DIHAPUS ---
+    // Coroutine GoToGameOver() tidak diperlukan lagi
+    // private IEnumerator GoToGameOver()
+    // {
+    //     ...
+    // }
 }
