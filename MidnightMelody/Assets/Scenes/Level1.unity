@@ -10392,7 +10392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3dd0bf6bc07564ebc42d2589221891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 0
 --- !u!114 &1565145726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13182,18 +13181,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cac54b7a483e12f429876e3e21b3d68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  d_template_npc: {fileID: 396562449}
+  d_template_npc: {fileID: 771856967979014599, guid: 7390827f732634f4bb9ed3b09106c78b, type: 3}
   canva_npc: {fileID: 24419523}
-  d_template_hero: {fileID: 862728087}
+  d_template_hero: {fileID: 2624334295811481694, guid: 0ce473d7f279d5f44a3f8a35646bd74d, type: 3}
   canva_hero: {fileID: 1311266050}
+  dialogueFont: {fileID: 0}
+  typingSpeed: 0.05
+  dialogueCanvasGroup: {fileID: 0}
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.3
   initialDialogue:
-  - text: aaaaaa
+  - text: 'Mengapa kota ini sangat berantakan ?
+
+      Dimana saya...'
     speaker: 1
-  - text: dddddddd
+  - text: 'KAMU BERADA DI KOTA MELODY !
+
+      KAMI BUTUH BANTUAN !!!!!!!!!!'
     speaker: 0
-  - text: asdadasd
+  - text: ee... bantuan apa ?
     speaker: 1
-  - text: asdadasdasda
+  - text: 'TOLONG KUMPULKAN 3 NOTE  !
+
+      ITU MERUPAKAN JANTUNG KOTA INI !!!'
     speaker: 0
   ongoingDialogue: []
   completeDialogue: []
