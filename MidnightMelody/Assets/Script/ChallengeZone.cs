@@ -27,7 +27,7 @@ public class ChallengeZone : MonoBehaviour
     public float gracePeriod = 0.3f;    
 
     private bool challengeStarted = false;
-    private bool inRed = false;
+    
     private bool challengeActive = false;
     private Vector3 lastPos;
 
@@ -115,7 +115,7 @@ public class ChallengeZone : MonoBehaviour
             if (stateText)
                 stateText.text = "<color=#FF4A4A>RED LIGHT</color>";
 
-            inRed = true;
+            
             float timer = redDuration;
             float grace = gracePeriod;
             while (timer > 0f)
@@ -146,7 +146,6 @@ public class ChallengeZone : MonoBehaviour
                 }
             }
 
-            inRed = false;
         }
     }
 
@@ -177,7 +176,6 @@ public class ChallengeZone : MonoBehaviour
     void EndChallenge()
     {
         challengeActive = false;
-        inRed = false;
         if (stateText) stateText.gameObject.SetActive(false);
 
         if (completeText)
