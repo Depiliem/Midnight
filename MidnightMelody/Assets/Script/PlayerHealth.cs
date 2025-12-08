@@ -41,11 +41,10 @@ public class PlayerHealth : MonoBehaviour
         
         if (currentHealth <= 0 && !isDead)
         {
-            Die(); // Panggil fungsi Die() yang baru
+            Die(); 
         }
         else
         {
-            // Hanya mainkan animasi damage jika belum mati
             if (animator != null)
                 animator.SetTrigger("isDamage");
                 
@@ -60,38 +59,17 @@ public class PlayerHealth : MonoBehaviour
             animator.ResetTrigger("isDamage");
     }
 
-    // --- FUNGSI DIE() YANG DIPERBARUI ---
+
     private void Die()
     {
         isDead = true;
         Debug.Log("💀 Player mati! Memuat scene GameOver...");
 
-        // --- DIHAPUS ---
-        // Kita tidak perlu menghentikan player atau memainkan animasi
-        // karena scene akan langsung berganti.
-        // if (heroScript != null)
-        //     heroScript.enabled = false;
-        // var rb = GetComponent<Rigidbody>();
-        // if (rb != null)
-        //     rb.velocity = Vector3.zero;
-        // if (animator != null)
-        //     animator.SetBool("isDead", true);
-        // StartCoroutine(GoToGameOver());
-        // ---------------
-
-        // --- BARU ---
-        // Aktifkan kursor agar bisa dipakai di menu GameOver
+        
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        // Langsung muat scene GameOver
         SceneManager.LoadScene("GameOver");
     }
 
-    // --- DIHAPUS ---
-    // Coroutine GoToGameOver() tidak diperlukan lagi
-    // private IEnumerator GoToGameOver()
-    // {
-    //     ...
-    // }
+    
 }

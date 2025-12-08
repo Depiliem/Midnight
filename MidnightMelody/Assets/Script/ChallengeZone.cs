@@ -133,9 +133,7 @@ public class ChallengeZone : MonoBehaviour
                 timer -= Time.deltaTime;
                 yield return null;
 
-                // --- PERBAIKAN 3 ---
-                // Cek apakah jumlah note SEKARANG dikurangi jumlah note AWAL
-                // sudah mencapai target 'stopAtNoteCount'.
+                
                 if (QuestManager.instance != null && (QuestManager.instance.notesCollected - notesAtChallengeStart) >= stopAtNoteCount)
                 {
                     EndChallenge();
