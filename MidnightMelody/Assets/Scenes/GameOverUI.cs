@@ -5,7 +5,7 @@ public class GameOverUI : MonoBehaviour
 {
     void Start()
     {
-        // Aktifkan kembali kursor saat scene GameOver dimulai
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

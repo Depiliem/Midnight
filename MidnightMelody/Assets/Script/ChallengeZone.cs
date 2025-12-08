@@ -47,8 +47,6 @@ public class ChallengeZone : MonoBehaviour
     {
         if (challengeStarted) return;
         if (other.transform != player) return;
-
-        // Cek ini tetap di sini untuk mencegah challenge dimulai
         if (!Sc_npc.HasTalkedToNpc)
         {
             Debug.Log("Player belum bicara dengan NPC!");
@@ -79,8 +77,7 @@ public class ChallengeZone : MonoBehaviour
         if (playerMovement) playerMovement.enabled = true;
         challengeActive = true;
         
-        // --- PERBAIKAN 2 ---
-        // Catat jumlah note yang dimiliki player TEPAT SAAT challenge dimulai
+    
         if (QuestManager.instance != null)
         {
             notesAtChallengeStart = QuestManager.instance.notesCollected;
