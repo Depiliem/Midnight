@@ -4,84 +4,96 @@ using System.Collections;
 
 public class RhythmManager : MonoBehaviour
 {
-    public float bpm = 120f;
-
     [Header("Sync Settings")]
-    [Tooltip("Posisi Y tengah dari HitZone Anda (misal: -4.0)")]
+    public float bpm = 120f;
+    [Tooltip("Posisi Y HitZone (Tempat Note ditekan)")]
     public float hitZoneY = -4f;
-    [Tooltip("Posisi Y dari Posisi Awal Note Anda (misal: 7.0)")]
+    [Tooltip("Posisi Y awal Note saat muncul")]
     public float spawnY = 7f;
-    [Tooltip("Berapa beat yang dibutuhkan Note untuk mencapai HitZone (misal: 1 atau 2)")]
+    [Tooltip("Berapa beat yang dibutuhkan Note untuk sampai ke HitZone")]
     public float dropTimeInBeats = 1f;
 
-    [Header("Countdown Settings")]
+    [Header("Countdown UI")]
     public TextMeshProUGUI countdownText;
-    public GameObject countdownBackground; // Untuk background hitam pudar
-    public float countdownDuration = 3f;
+    public GameObject countdownBackground;
 
     [Header("Countdown Animation")]
-    public float animationDuration = 0.4f; // Durasi animasi geser (detik)
-    public float startXOffset = -500f;    // Posisi X awal di luar layar (kiri)
+    public float animationDuration = 0.4f;
+    public float startXOffset = -2000f; // Muncul dari kiri jauh
     private RectTransform countdownRectTransform;
+    private float targetYPosition; // Mengambil posisi Y yang Anda atur di Inspector
+
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public AudioClip countdownSound; // Suara hitungan (3, 2, 1)
+    public AudioClip goSound;        // Suara GO!
+    public AudioClip gameMusic;      // Lagu Utama
+
+    [Header("Music Cut & Fade Settings")]
+    public float musicStartTime = 45f; // Mulai dari 00:45
+    public float musicEndTime = 70f;   // Berhenti di 01:10 (70 detik)
+    public float fadeDuration = 2f;    // Durasi halus suara muncul/hilang
 
     private float beatInterval;
     private float calculatedFallSpeed;
 
     void Start()
     {
-        // 1. Hitung Kecepatan dan Interval Beat
+        // 1. Kalkulasi Kecepatan Note
         beatInterval = 60f / bpm;
         float totalDropTime = beatInterval * dropTimeInBeats;
         float distance = spawnY - hitZoneY;
         calculatedFallSpeed = distance / totalDropTime;
 
-        // 2. Dapatkan RectTransform
+        // 2. Setup UI dan Posisi Y
         if (countdownText != null)
         {
             countdownRectTransform = countdownText.GetComponent<RectTransform>();
+            if (countdownRectTransform != null)
+            {
+                // Mengambil posisi Y yang sudah Anda geser di Inspector
+                targetYPosition = countdownRectTransform.anchoredPosition3D.y;
+            }
         }
 
-        // 3. Mulai Coroutine Hitungan Mundur
+        // 3. Mulai Proses Countdown
         StartCoroutine(StartCountdownRoutine());
     }
 
     private IEnumerator StartCountdownRoutine()
     {
-        // 1. Aktifkan teks dan background
-        if (countdownText != null)
-        {
-            countdownText.gameObject.SetActive(true);
-        }
-        if (countdownBackground != null)
-        {
-            countdownBackground.SetActive(true);
-        }
+        if (countdownText != null) countdownText.gameObject.SetActive(true);
+        if (countdownBackground != null) countdownBackground.SetActive(true);
 
-        // --- Logika Hitungan Mundur (Teks & Animasi) ---
+        // --- Proses Hitungan Mundur ---
         yield return StartCoroutine(AnimateCountdownText("THREE", 1f));
         yield return StartCoroutine(AnimateCountdownText("TWO", 1f));
         yield return StartCoroutine(AnimateCountdownText("ONE", 1f));
+        yield return StartCoroutine(AnimateCountdownText("GO!", 0.5f));
 
-        // --- Logika GO! ---
-        if (countdownText != null)
-        {
-            yield return StartCoroutine(AnimateCountdownText("GO!", 0.5f));
-        }
-
-        // Tunggu sebentar setelah "GO!"
         yield return new WaitForSeconds(0.2f);
 
-        // 2. Nonaktifkan teks dan background
-        if (countdownText != null)
+        // Matikan UI Countdown
+        if (countdownText != null) countdownText.gameObject.SetActive(false);
+        if (countdownBackground != null) countdownBackground.SetActive(false);
+
+        // --- Mulai Memutar Lagu (Dengan Cut & Fade) ---
+        if (audioSource != null && gameMusic != null)
         {
-            countdownText.gameObject.SetActive(false);
-        }
-        if (countdownBackground != null)
-        {
-            countdownBackground.SetActive(false);
+            audioSource.clip = gameMusic;
+            audioSource.time = musicStartTime; // Lompat ke 00:45
+            audioSource.volume = 0f;           // Mulai dari senyap
+            audioSource.Play();
+
+            // Efek Fade In
+            StartCoroutine(FadeMusic(0f, 1f, fadeDuration));
+
+            // Jadwalkan Fade Out sebelum lagu berakhir
+            float totalPlayTime = musicEndTime - musicStartTime;
+            Invoke("TriggerFadeOut", totalPlayTime - fadeDuration);
         }
 
-        // 3. Panggil fungsi untuk memulai Note
+        // Aktifkan Note untuk mulai jatuh
         PrepareAllNotesInScene();
     }
 
@@ -93,46 +105,70 @@ public class RhythmManager : MonoBehaviour
             yield break;
         }
 
-        // 1. Atur Teks Baru dan Posisi Awal (Di luar kiri)
-        countdownText.text = textToDisplay;
-        Vector3 startPosition = new Vector3(startXOffset, 0f, 0f);
-        Vector3 endPosition = Vector3.zero; // Posisi Tengah (0, 0, 0)
-        countdownRectTransform.anchoredPosition3D = startPosition;
-
-        // 2. Animasi Geser dari Kiri ke Tengah
-        float elapsedTime = 0f;
-        while (elapsedTime < animationDuration)
+        // Suara
+        if (audioSource != null)
         {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / animationDuration);
+            if (textToDisplay == "GO!") audioSource.PlayOneShot(goSound);
+            else audioSource.PlayOneShot(countdownSound);
+        }
 
-            // Menggunakan Lerp dengan smoothing (Ease-Out)
-            float smoothT = 1f - Mathf.Pow(1f - t, 3f);
+        // Setup Animasi
+        countdownText.text = textToDisplay;
+        Vector3 startPos = new Vector3(startXOffset, targetYPosition, 0f);
+        Vector3 endPos = new Vector3(0f, targetYPosition, 0f);
+        countdownRectTransform.anchoredPosition3D = startPos;
 
-            countdownRectTransform.anchoredPosition3D = Vector3.Lerp(startPosition, endPosition, smoothT);
+        // Gerakan Slide-In
+        float elapsed = 0f;
+        while (elapsed < animationDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / animationDuration);
+            float smoothT = 1f - Mathf.Pow(1f - t, 3f); // Ease Out
 
+            countdownRectTransform.anchoredPosition3D = Vector3.Lerp(startPos, endPos, smoothT);
             yield return null;
         }
 
-        countdownRectTransform.anchoredPosition3D = endPosition;
-
-        // 3. Tahan Teks di Tengah
+        countdownRectTransform.anchoredPosition3D = endPos;
         yield return new WaitForSeconds(waitTime - animationDuration);
+    }
+
+    // Fungsi Fade Out
+    private void TriggerFadeOut()
+    {
+        StartCoroutine(FadeMusic(audioSource.volume, 0f, fadeDuration));
+        Invoke("StopMusicCompletely", fadeDuration);
+    }
+
+    private void StopMusicCompletely()
+    {
+        audioSource.Stop();
+        Debug.Log("Lagu Selesai (Limit 01:10 tercapai)");
+    }
+
+    // Coroutine Universal untuk Fade Volume
+    private IEnumerator FadeMusic(float startVol, float targetVol, float duration)
+    {
+        float timer = 0;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVol, targetVol, timer / duration);
+            yield return null;
+        }
+        audioSource.volume = targetVol;
     }
 
     void PrepareAllNotesInScene()
     {
-        NoteObject[] allNotesInScene = FindObjectsOfType<NoteObject>();
-
-        foreach (NoteObject note in allNotesInScene)
+        NoteObject[] allNotes = FindObjectsOfType<NoteObject>();
+        foreach (NoteObject note in allNotes)
         {
             note.fallSpeed = calculatedFallSpeed;
             note.PrepareToStart();
         }
     }
 
-    public float GetBeatInterval()
-    {
-        return beatInterval;
-    }
+    public float GetBeatInterval() => beatInterval;
 }
