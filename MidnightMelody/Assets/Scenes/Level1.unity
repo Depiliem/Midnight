@@ -13565,7 +13565,7 @@ MonoBehaviour:
   canva_npc: {fileID: 24419523}
   d_template_hero: {fileID: 2624334295811481694, guid: 0ce473d7f279d5f44a3f8a35646bd74d, type: 3}
   canva_hero: {fileID: 1311266050}
-  dialogueFont: {fileID: 0}
+  dialogueFont: {fileID: 11400000, guid: 7ec3a34d76721c844a571bfa366bfaef, type: 2}
   typingSpeed: 0.05
   dialogueCanvasGroup: {fileID: 0}
   fadeInDuration: 0.3
