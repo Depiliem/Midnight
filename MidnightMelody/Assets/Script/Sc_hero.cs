@@ -26,18 +26,13 @@ public class Sc_hero : MonoBehaviour
         HeroAniCont = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         
-        // PENTING: Pastikan juga Rigidbody di Inspector punya:
-        // 1. Drag = 0
-        // 2. Interpolate = Interpolate (untuk fix stutter kamera)
-        // 3. Freeze Rotation di X dan Z
+
     }
 
     void Update()
     {
         if (dialogue) return;
 
-        // Logika "else" ini penting untuk mencegah konflik
-        // antara Lompat() dan CekTanah() di frame yang sama.
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Lompat();
@@ -50,7 +45,7 @@ public class Sc_hero : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Selalu terapkan fallMultiplier jika sedang jatuh
+
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
@@ -77,9 +72,6 @@ public class Sc_hero : MonoBehaviour
         if (isMoving)
         {
             Quaternion targetRot = Quaternion.LookRotation(targetDirection, Vector3.up);
-            // Menggunakan Time.deltaTime di sini oke, tapi lebih baik
-            // memindahkan rotasi ke FixedUpdate dan menggunakan rb.MoveRotation()
-            // Tapi untuk saat ini, ini tidak masalah.
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
         
@@ -108,17 +100,12 @@ public class Sc_hero : MonoBehaviour
 
     void CekTanah()
     {
-        // 1. Lakukan Raycast
         bool raycastHit = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance);
 
         if (raycastHit)
         {
-            // 2. Jika Raycast kena, kita PASTI di tanah.
-            //    Ini memperbaiki bug "stuck".
             isGrounded = true; 
 
-            // 3. Cek untuk mendaratkan animasi
-            //    Kita cek 'isJumping' (flag dari Lompat())
             if (isJumping && rb.velocity.y < -0.1f)
             {
                 isJumping = false;
@@ -127,7 +114,6 @@ public class Sc_hero : MonoBehaviour
         }
         else
         {
-            // 4. Jika Raycast tidak kena, kita PASTI di udara.
             isGrounded = false;
         }
     }

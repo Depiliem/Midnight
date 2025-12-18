@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TalkHint : MonoBehaviour
 {
-    [SerializeField] GameObject hint;   // drag TalkHint di sini
+    [SerializeField] GameObject hint;   
 
     void Awake()
     {

@@ -6,14 +6,14 @@ using System.Collections;
 public class RedLightGreenLight : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] Transform player;                 // drag hero
-    [SerializeField] TextMeshProUGUI uiText;           // 1 teks untuk semua notifikasi
-    [SerializeField] GameObject uiPanel;               // panel/background UI (optional)
+    [SerializeField] Transform player;                 
+    [SerializeField] TextMeshProUGUI uiText;           
+    [SerializeField] GameObject uiPanel;               
 
     [Header("Timing (seconds)")]
-    [SerializeField] float countdownTime = 3f;         // "Game akan dimulai" -> 3..2..1
-    [SerializeField] float greenDuration = 4f;         // durasi GREEN
-    [SerializeField] float redDuration = 3f;           // durasi RED
+    [SerializeField] float countdownTime = 3f;         
+    [SerializeField] float greenDuration = 4f;         
+    [SerializeField] float redDuration = 3f;           
 
     [Header("Rules")]
     [SerializeField] string playerTag = "Player";
@@ -25,7 +25,6 @@ public class RedLightGreenLight : MonoBehaviour
 
     void Reset()
     {
-        // otomatis cari player bertag Player
         GameObject p = GameObject.FindGameObjectWithTag("Player");
         if (p) player = p.transform;
     }
@@ -72,7 +71,6 @@ public class RedLightGreenLight : MonoBehaviour
 
         while (timer < redDuration)
         {
-            // cek gerak horizontal saja
             Vector3 now = player.position;
             now.y = 0f;
             Vector3 lp = lastPos; lp.y = 0f;
@@ -88,7 +86,7 @@ public class RedLightGreenLight : MonoBehaviour
             yield return null;
         }
 
-        // selesai satu siklus. Ulangi pola GREEN->RED terus selama player masih di zona.
+
         while (inZone)
         {
             // GREEN

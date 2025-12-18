@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 1.06
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 7dcf5007b1d2ddc4dafa1ced5c112bfb, type: 2}
@@ -32,7 +32,7 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
@@ -5470,12 +5470,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.4
+  m_Color: {r: 0.51411176, g: 0.8037735, b: 0.7719108, a: 1}
+  m_Intensity: 0.12
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -5514,10 +5514,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -5533,13 +5533,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 9.3, z: -2.55}
+  m_LocalRotation: {x: 0.8370034, y: 0.48033816, z: -0.24739322, w: 0.08658616}
+  m_LocalPosition: {x: -46.8, y: 30.1, z: 52.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 22.495, y: 200.99, z: 124.519}
 --- !u!114 &705507996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5666,7 +5666,7 @@ Transform:
   m_GameObject: {fileID: 718345934}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: -0.12, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5684,8 +5684,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
-  m_Intensity: 1
-  m_Range: 10
+  m_Intensity: 3
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -6342,8 +6342,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
-  m_Intensity: 2
-  m_Range: 10
+  m_Intensity: 3
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -8397,8 +8397,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
-  m_Intensity: 1
-  m_Range: 10
+  m_Intensity: 3
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -11001,7 +11001,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
   m_Intensity: 0.2
-  m_Range: 10
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -12196,8 +12196,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
-  m_Intensity: 2
-  m_Range: 10
+  m_Intensity: 3
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -12411,31 +12411,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999994
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.001042348
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.00026419022
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.00039380137
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 0.119
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 4647311806803214696, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 0.045
       objectReference: {fileID: 0}
     - target: {fileID: 5419310138253925330, guid: 5f15deb202291424ca428c08cb55fd94, type: 3}
       propertyPath: m_Name
@@ -12730,8 +12730,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.84313726, g: 0.34117648, b: 0.9137255, a: 1}
-  m_Intensity: 2
-  m_Range: 10
+  m_Intensity: 3
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -13801,7 +13801,7 @@ MonoBehaviour:
   canva_npc: {fileID: 24419523}
   d_template_hero: {fileID: 2624334295811481694, guid: 0ce473d7f279d5f44a3f8a35646bd74d, type: 3}
   canva_hero: {fileID: 1311266050}
-  dialogueFont: {fileID: 0}
+  dialogueFont: {fileID: 11400000, guid: 7ec3a34d76721c844a571bfa366bfaef, type: 2}
   typingSpeed: 0.05
   initialDialogue:
   - text: 'Mengapa kota ini sangat berantakan ?
