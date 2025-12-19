@@ -29,4 +29,9 @@ public class ScoreManager : MonoBehaviour
             scoreText.text = "Score: " + currentScore;
         }
     }
+    public int GetCurrentScore()
+    {
+        // Return variabel skor yang Anda gunakan (misal: currentScore)
+        return currentScore;
+    }
 }
