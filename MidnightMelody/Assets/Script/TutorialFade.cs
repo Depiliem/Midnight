@@ -3,32 +3,52 @@ using System.Collections;
 
 public class TutorialFade : MonoBehaviour
 {
-    public CanvasGroup group;          // drag your CanvasGroup here (or leave empty)
-    public float showSeconds = 5f;     // how long it stays fully visible
-    public float fadeSeconds = 1f;     // fade-out duration
-    public bool disableAfter = true;   // hide object after fade
+    public CanvasGroup group;          // Drag CanvasGroup ke sini
+    public float showSeconds = 5f;     // Durasi tampil penuh
+    public float fadeSeconds = 1f;     // Durasi fade-out
+    public bool disableAfter = true;   // Matikan objek setelah fade
 
-    IEnumerator Start()
+    void Start()
     {
         if (!group) group = GetComponent<CanvasGroup>();
+
+        // Inisialisasi awal UI
         group.alpha = 1f;
         group.interactable = true;
         group.blocksRaycasts = true;
 
-        yield return new WaitForSecondsRealtime(showSeconds);
+        // Menunggu sebelum mulai fade-out (menggunakan Invoke)
+        Invoke("StartiTweenFade", showSeconds);
+    }
 
-        float t = 0f;
-        while (t < fadeSeconds)
-        {
-            t += Time.unscaledDeltaTime;
-            group.alpha = Mathf.Lerp(1f, 0f, t / fadeSeconds);
-            yield return null;
-        }
+    void StartiTweenFade()
+    {
+        // Menggunakan iTween ValueTo untuk mengubah nilai alpha secara halus
+        iTween.ValueTo(gameObject, iTween.Hash(
+            "from", 1f,
+            "to", 0f,
+            "time", fadeSeconds,
+            "onupdate", "UpdateAlpha",        // Fungsi yang dipanggil setiap frame
+            "oncomplete", "OnFadeComplete",    // Fungsi yang dipanggil saat selesai
+            "ignoretimescale", true            // Sama seperti WaitForSecondsRealtime
+        ));
+    }
 
-        group.alpha = 0f;
+    // Fungsi bantuan iTween untuk mengupdate Alpha
+    void UpdateAlpha(float val)
+    {
+        group.alpha = val;
+    }
+
+    // Fungsi bantuan iTween saat animasi selesai
+    void OnFadeComplete()
+    {
         group.interactable = false;
         group.blocksRaycasts = false;
 
-        if (disableAfter) gameObject.SetActive(false);
+        if (disableAfter)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
